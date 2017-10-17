@@ -1,0 +1,146 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Smartphone Authentication System</title>
+    <style type="text/css">
+        div.container {
+            border: 1px solid black;
+            margin: 1rem;
+        }
+        div.header,div.footer {
+            text-align: center;
+            background-color:cornflowerblue;
+            margin: 0;
+            clear:left;
+        }
+        div.header {
+            padding: 1.5rem;
+        }
+        div.footer {
+            padding: 0.3rem;
+        }
+        
+        h1 {
+            margin: 0;
+            color: white;
+            font-family:sans-serif;
+        }
+        h2 {
+            text-align: center;
+        }
+        p.eye-title {
+            opacity: 1;
+            color: white;
+            font-size: 0.7rem;
+            font-family:sans-serif;
+        }
+        #system_info {
+            width:36%;
+            text-align: center;
+            float:left;
+            padding-left: 2%;
+            padding-right: 2%;
+        }
+        div.pho-content {
+            margin-left: 40%;
+            width: 60%;
+        }
+        div#search {
+            text-align: center;
+            margin-left: 40%;
+            width: 60%;
+        }
+        table {
+            width:90%;
+            background: silver;
+        }
+        td {
+			text-transform: capitalize;
+            background: white;
+            padding: 0.5rem 0.5rem;
+        }
+        tr:first-child td{
+            width:8rem;
+        }
+        #system-pic{width:90%}
+        #wifi{width:30%;opacity: 0.5;margin: 20% 0;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>电磁泄漏手机认证系统</h1>
+            <p class="eye-title">Smartphone Authentication System</p></div>
+        <div id="system_info">
+            <p>本系统是一种利用电脑显示器的电磁泄漏实现手机的认证系统。整个系统的结构如下图所示:</p>
+            <img id="system-pic" src="img/structure.png" alt="experiment structure map" /><br/>
+            <button value="开始验证">开始</button>
+            <p style="font-size:0.6rem;opacity:0.5;">点击开始按钮验证手机</p>
+        </div>
+        <div class="pho-content" hidden>
+            <h2>获取到的手机信息</h2>
+            <table>
+                <!--
+                <tr><td>IMSI</td><td id="_imsi">unkown</td></tr>
+                <tr><td>本机号码</td><td id="_phoneNumber">unkown</td></tr>
+                <tr><td>android版本</td><td>unkown</td></tr>
+                <tr><td>linux版本</td><td>unkown</td></tr>
+                <tr><td>...</td><td>unkown</td></tr>
+                -->
+            </table>
+        </div>
+        <div id="search">
+            <img src="img/images.jpg" id="wifi"/>
+        </div>
+        <div class="footer"><p class="eye-title">2016年毕业设计-刘逸聪 @东南大学信息安全实验室-宋宇波副教授</p></div>
+    </div>
+    <script type="text/javascript" src="js/jquery-1.11.3.min.js">
+    </script>
+	<script type="text/javascript">
+	var rand = {}; 
+	rand.get = function (begin,end) {  
+		return Math.floor(Math.random()*(end-begin))+begin;
+	} 
+ 	var ssid=rand.get(100,999);       
+        var timeout = 2*1000;
+        var counter = 60;
+	   function showJasonData(data)
+	   {
+           console.log(data);
+           if(data.imsi == "timeout")
+           {
+            if(counter>0)
+            {
+                counter= counter-1;
+                setTimeout(getJsonData,timeout);
+                return;
+            }
+           }
+		  $("#search").hide();
+		  $("table tr").remove();
+           var _table= $("table");
+           for(a in data)
+           {
+               var _tr = $("<tr>");
+               _tr.append($("<td>",{"text":a}));
+               _tr.append($("<td>",{"text":data[a]}));
+               _table.append(_tr);
+           }
+		  $(".pho-content").show();
+	   }
+       function getJsonData()
+       {
+            $.post("cgi/get_json.php",{"ssid":ssid},showJasonData,"json");
+       }
+
+        $("button").bind("click",
+            function(){
+                $(".pho-content").hide();
+                $("#search").show();
+                $.post("cgi/post_sid.php",{"ssid":ssid});
+                $("#wifi").attr("src","img/waiting.gif");
+                getJsonData();
+            });
+	</script>
+</body>
+</html>
