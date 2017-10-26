@@ -1,4 +1,4 @@
-# Authentication System Based on Electromagnetic Emanation Communication
+# Authentication System Based on Electromagnetic Emanation of the Monitor
 
 Nowadays, as more and more kinds of electronic devices are booming, many applications and social software are no longer limited to one single platform. They are extended to a variety of terminals, such as smartphones, tablets and computers. However, identity authentication needs to be done repeatedly for lack of a direct means of communication, affecting users’ experience.
 
